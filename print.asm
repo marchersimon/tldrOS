@@ -10,19 +10,25 @@ actually_print_string:
 
 print_char:
     pusha
+    mov ah, 0x0e
     mov al, [bx]
     int 0x10
     popa
     ret
     
 print_lf:
+    pusha
+    mov ah, 0x0e
     mov al, 10
     int 0x10
     mov al, 13
     int 0x10
+    popa
     ret
     
 print_hex:
+    pusha
+    mov ah, 0x0e
     mov dx, 0
 decode_hex:
     mov cx, bx
@@ -48,6 +54,7 @@ print_hex_from_stack:
     inc dx
     cmp dx, 4
     jne print_hex_from_stack
+    popa
     ret
     
 num_to_ascii:
@@ -59,3 +66,34 @@ sym_to_ascii:
     add cx, 0x37
     push cx
     jmp continue   
+
+
+[bits 32]
+
+VIDEO_MEMORY equ 0xb8000
+WHITE_ON_BLACK equ 0x0f
+
+print_string_pm:
+pusha
+mov edx, VIDEO_MEMORY
+
+print_string_pm_loop:
+mov al, [ebx]
+mov ah, WHITE_ON_BLACK
+
+cmp al, 0
+je done
+
+mov [edx], ax
+
+add ebx, 1
+add edx, 2
+
+jmp print_string_pm_loop
+
+done:
+    popa
+    ret
+
+[bits 16]
+    
