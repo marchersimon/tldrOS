@@ -70,8 +70,8 @@ sym_to_ascii:
 
 [bits 32]
 
-VIDEO_MEMORY equ 0xb8000
-WHITE_ON_BLACK equ 0x0f
+VIDEO_MEMORY equ 0xb8000 + 320
+WHITE_ON_BLACK equ 0x70
 
 print_string_pm:
 pusha

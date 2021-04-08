@@ -1,10 +1,11 @@
 load_kernel:
-    mov bx, MSG_LOAD_KERNEL
+    mov bx, MSG_LOAD_KERNEL		; Print a message
     call print_string
     call print_lf
     
-    mov bx, KERNEL_OFFSET   ; Load the kernel to 0x1000
-    mov al, 1              ; Request 15 sectors (sector 2 - 16)
+    mov [number_of_sectors], word 0x15	; Request 15 sectors
+    mov [dest_adress], word 0xA000		; Set destination address in Memory
+    mov [start_reading], dword 0x01		; Address on disk to read from
     
     call disk_load
     ret
