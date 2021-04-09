@@ -57,6 +57,9 @@ mov es, ax
 mov fs, ax
 mov gs, ax
 
+mov esp, 0x108000
+mov ebp, esp
+
 mov ebx, MSG_PM		; Print message
 call print_string_pm
 
