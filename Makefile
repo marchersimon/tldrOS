@@ -1,7 +1,7 @@
-run: all
+all: compile
 	qemu-system-x86_64 os.iso
 
-all: bootloader
+compile: bootloader
 	/home/simon/opt/cross/bin/i386-elf-gcc -fno-pic -m32 -ffreestanding -c src/kernel/kernel.c -o build/kernel.o
 	/home/simon/opt/cross/bin/i386-elf-ld -T ./link.ld
 	cat build/boot.bin build/kernel.bin > os.iso
@@ -10,6 +10,10 @@ all: bootloader
 bootloader:
 	nasm src/bootloader/boot.asm -o build/boot.bin
 	nasm src/bootloader/kernel_entry.asm -f elf -o build/kernel_entry.o
+	
+run:
+	qemu-system-x86_64 os.iso
+
 	
 clean:
 	rm build/*

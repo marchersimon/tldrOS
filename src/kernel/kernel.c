@@ -1,6 +1,8 @@
+enum attributeColor{black, blue, green, cyan, red, purple, brown, gray, darkGray, lightBlue, lightGreen, lightCyan, lightRed, lightPurple, yellow, white};
+
 char* videoMemory = 0xb8000;
 int cursorPosition = 0;
-char fontAttribute = 0x07;
+char fontColor = 0x07;
 
 void skipLines(int lines) {
 	for(int i = 0; i < lines; i++) {
@@ -16,7 +18,7 @@ int printf(char* string) {
 			continue;
 		}
 		videoMemory[cursorPosition] = string[i];
-		videoMemory[cursorPosition+1] = fontAttribute;
+		videoMemory[cursorPosition+1] = fontColor;
 		cursorPosition += 2;
 	}
 	return 0;
@@ -29,33 +31,39 @@ void clearScreen() {
 	cursorPosition = 0;
 }
 
-void bootMsg(int status) {
+void setFontColor (char foregroundColor, char backgroundColor) {
+	fontColor = foregroundColor | (backgroundColor << 4);
+}
+
+void bootMsg(int status, char* msg) {
 	switch(status) {
 		case 0:
-			fontAttribute = 0x07;
+			fontColor = 0x07;
 			printf("[  ");
-			fontAttribute = 0x02;
+			fontColor = 0x02;
 			printf("OK");
-			fontAttribute = 0x07;
+			fontColor = 0x07;
 			printf("  ] ");
 			break;
 		case 1:
-			fontAttribute = 0x07;
+			fontColor = 0x07;
 			printf("[");
-			fontAttribute = 0x04;
+			fontColor = 0x04;
 			printf("FAILED");
-			fontAttribute = 0x07;
+			fontColor = 0x07;
 			printf("] ");
 			break;
 	}
+	printf(msg);
+	printf("\n");
 }
 
 void main () {
 	
 	skipLines(3);
-	bootMsg(0);
-	printf("Loaded kernel\n");
+	bootMsg(0, "Loaded kernel");
 	printf("Welcome to tldrOS\n");
+		
 	printf("      ___           ___       ___           ___           ___           ___     \n");
 	printf("     /\\  \\         /\\__\\     /\\  \\         /\\  \\         /\\  \\         /\\  \\    \n");
 	printf("     \\:\\  \\       /:/  /    /::\\  \\       /::\\  \\       /::\\  \\       /::\\  \\   \n");
@@ -67,6 +75,5 @@ void main () {
 	printf("   \\/__/         \\:\\  \\    \\:\\/:/  /      |:|\\/__/     \\:\\/:/  /     \\:\\/:/  /  \n");
 	printf("                  \\:\\__\\    \\::/__/       |:|  |        \\::/  /       \\::/  /   \n");
 	printf("                   \\/__/     ~~            \\|__|         \\/__/         \\/__/    \n");
-
 	//clearScreen();
 }
