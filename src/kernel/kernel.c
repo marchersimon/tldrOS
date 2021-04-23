@@ -1,5 +1,6 @@
 char* videoMemory = 0xb8000;
 int cursorPosition = 0;
+char fontAttribute = 0x07;
 
 void skipLines(int lines) {
 	for(int i = 0; i < lines; i++) {
@@ -15,7 +16,7 @@ int printf(char* string) {
 			continue;
 		}
 		videoMemory[cursorPosition] = string[i];
-		videoMemory[cursorPosition+1] = 0x07;
+		videoMemory[cursorPosition+1] = fontAttribute;
 		cursorPosition += 2;
 	}
 	return 0;
@@ -28,10 +29,32 @@ void clearScreen() {
 	cursorPosition = 0;
 }
 
+void bootMsg(int status) {
+	switch(status) {
+		case 0:
+			fontAttribute = 0x07;
+			printf("[  ");
+			fontAttribute = 0x02;
+			printf("OK");
+			fontAttribute = 0x07;
+			printf("  ] ");
+			break;
+		case 1:
+			fontAttribute = 0x07;
+			printf("[");
+			fontAttribute = 0x04;
+			printf("FAILED");
+			fontAttribute = 0x07;
+			printf("] ");
+			break;
+	}
+}
+
 void main () {
 	
 	skipLines(3);
-	printf("Successfully loaded kernel\n");
+	bootMsg(0);
+	printf("Loaded kernel\n");
 	printf("Welcome to tldrOS\n");
 	printf("      ___           ___       ___           ___           ___           ___     \n");
 	printf("     /\\  \\         /\\__\\     /\\  \\         /\\  \\         /\\  \\         /\\  \\    \n");
