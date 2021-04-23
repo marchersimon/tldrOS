@@ -37,10 +37,10 @@ mov cr0, eax
 jmp CODE_SEG:init_pm	; Make a far jump to flush the pipeline
 
 
-%include "print.asm"
-%include "disk.asm"
-%include "gdt.asm"
-%include "kernel.asm"
+%include "src/bootloader/print.asm"
+%include "src/bootloader/disk.asm"
+%include "src/bootloader/gdt.asm"
+%include "src/bootloader/kernel.asm"
 
 BOOT_DRIVE: dw 0
 MSG_EXEC_SECTOR: db 'Executing boot sector at ', 0
