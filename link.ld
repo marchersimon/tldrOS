@@ -15,6 +15,6 @@ SECTIONS {
 	}
 }
 
-INPUT(build/kernel_entry.o build/kernel.o)
+INPUT(build/kernel_entry.o build/kernel.o build/stdio.o)
 
 OUTPUT(build/kernel.bin)
