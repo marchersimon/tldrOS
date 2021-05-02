@@ -1,8 +1,35 @@
 [org 0x7c00]	; Compensating the address offset
 [bits 16]
-start:
+
+jmp start		; jump to the code
+db 0			; because jmp start only has 2 bytes and BPB has to start at 0x03
+
+BPB:
+db 'tldrOS  '	; OEM name
+dw 0x200		; bytes per sector (will be 00 02, because little endian)
+db 0x01			; number of sectors per cluster
+dw 0x01			; number of reserved sectors (including boot sector)
+db 0x02			; number of FAT tables
+dw 224			; number of directory entries
+dw 2880			; number of sectors
+db 0xf0			; media descriptor
+dw 0x09			; number of sectors per FAT
+dw 0x09			; number of sectors per track
+dw 0x02			; number of heads
+dw 0x00 		; number of hidden sectors
+EBPB:
+dw 0x00			; number of hidden sectors (high word)
+dd 0x00			; number of sectors if greater than 65535
+db 0x80			; boot drive number
+db 0x00			; reserved
+db 0x28			; signature
+dd 0x00			; volumeID
+times 11 db ' '	; volume label
+db 'FAT16   '	; file system type
 
 KERNEL_OFFSET equ 0xA000	; Setting the address where the kernel should be loaded to
+
+start:
 
 mov bx, dx				; Store boot drive number, stored in dl
 and bx, 0x00ff
